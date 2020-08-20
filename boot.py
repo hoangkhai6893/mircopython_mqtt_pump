@@ -14,20 +14,30 @@ gc.collect()
 
 led = Pin(2, Pin.OUT, value=1)
 pump = Pin(13, Pin.OUT, value=1)
+pump_2 = Pin(12, Pin.OUT, value=1)
 
 # ssid = 'SPWN_H36_E5B8E2'
 # password = '9amfeyrjry66eh4'
 # mqtt_server = '192.168.100.100'
 
-ssid = '3104145E'
-password = '0850023821'
-mqtt_server = '192.168.43.43'
+
+# ssid = '3104145E'
+# password = '0850023821'
+# mqtt_server = '192.168.43.43'
+
+
+ssid = 'ninja_Leo'
+password = 'F!b@12358!'
+mqtt_server = '192.168.68.113'
+
 
 # EXAMPLE IP ADDRESS
 #mqtt_server = '192.168.1.144'
 client_id = ubinascii.hexlify(machine.unique_id())
 topic_sub = b'home/pumper_1/control'
+topic_sub_2 = b'home/pumper_2/control'
 topic_pub = b'home/pumper_1/status'
+topic_pub_2 = b'home/pumper_2/status'
 station = network.WLAN(network.STA_IF)
 
 station.active(True)
@@ -40,4 +50,5 @@ print('Connection successful')
 print(station.ifconfig())
 led.value(0)
 state = b'off'
+state_2 = b'off2'
 

@@ -1,15 +1,23 @@
 
 def sub_cb(topic, msg):
-    global state
+    global state,state_2
     print((topic, msg))
     if msg == b"on":
         led.value(1)
         state = msg
-        # control_pumer('on')
+        control_pumer('on')
     elif msg == b"off":
         led.value(0)
         state = msg
-        # control_pumer('off')
+        control_pumer('off')
+    elif msg == b"on2":
+        led.value(1)
+        state_2 = msg
+        control_pumer('on2')
+    elif msg == b"off2":
+        led.value(0)
+        state_2 = msg
+        control_pumer('off2')
     else:
         pass
 
@@ -21,6 +29,14 @@ def control_pumer(msg):
     elif msg == 'off':
         led.value(0)
         pump.value(1)
+        client.publish(topic_pub, msg)
+    if msg == 'on2':
+        led.value(1)
+        pump_2.value(0)
+        client.publish(topic_pub, msg)
+    elif msg == 'off2':
+        led.value(0)
+        pump_2.value(1)
         client.publish(topic_pub, msg)
 
 
@@ -57,24 +73,23 @@ time_watering_auto = 8
 time_cycle_auto = 720
 while True:
     try:
-        led.value(0)
         client.check_msg()
         time_count_down = time_delay_state - (time.time() - last_message)
-
         if time_count_down <= 0:
-
+            led.value(1)
+            client.publish(topic_pub, state)
+            client.publish(topic_pub, state_2)
             last_message = time.time()
-            control_pumer('off')
             count_auto_pump = count_auto_pump + 1
             print("send msg")
-            led.value(1)
             sleep(0.01)
         if state == b'on':
+            led.value(1)
             time_delay_state = 1
-            control_pumer('on')
         else:
+            led.value(0)
             time_delay_state = 5
-        if count_auto_pump > 300:
+        if count_auto_pump > time_cycle_auto:
             count_auto_pump = 0
             if state == b'off':
                 control_pumer('on')
